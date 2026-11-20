@@ -51,17 +51,46 @@ function requireRole(min) {
 }
 
 // ── FiveM API helper ────────────────────────────────
+
+// ── FiveM API helper ────────────────────────────────
+
+// Temporary diagnostic: checks the actual Render token length
+console.log('[WireGuard] Render API_TOKEN length:', API_TOKEN.length);
+
 async function fivem(pathPart, options = {}) {
     const url = `${FIVEM_API_URL.replace(/\/$/, '')}/${pathPart}`;
+
     const res = await fetch(url, {
         ...options,
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${API_TOKEN}`, ...(options.headers || {}) }
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${API_TOKEN}`,
+            ...(options.headers || {})
+        }
     });
+
     const text = await res.text();
-    let body; try { body = JSON.parse(text); } catch { body = { raw: text }; }
+    let body;
+
+    try {
+        body = JSON.parse(text);
+    } catch {
+        body = { raw: text };
+    }
+
     return { status: res.status, body };
 }
-const safeFivem = async (p, o) => { try { return await fivem(p, o); } catch { return { status: 502, body: { error: 'fivem offline' } }; } };
+
+const safeFivem = async (p, o) => {
+    try {
+        return await fivem(p, o);
+    } catch {
+        return {
+            status: 502,
+            body: { error: 'fivem offline' }
+        };
+    }
+};
 
 // ── auth routes ─────────────────────────────────────
 app.post('/api/login', (req, res) => {
