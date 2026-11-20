@@ -16,9 +16,15 @@ const enabled = !!DB_HOST;
 
 if (enabled) {
     pool = mysql.createPool({
-        host: DB_HOST, port: Number(DB_PORT), user: DB_USER,
-        password: DB_PASSWORD, database: DB_NAME,
-        waitForConnections: true, connectionLimit: 6, queueLimit: 0
+        host: DB_HOST,
+        port: Number(DB_PORT),
+        user: DB_USER,
+        password: DB_PASSWORD,
+        database: DB_NAME,
+        waitForConnections: true,
+        connectionLimit: 6,
+        queueLimit: 0,
+        ssl: {}
     });
 }
 
